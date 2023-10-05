@@ -1,0 +1,23 @@
+name: build and test the project
+on:
+  push:
+    branches:
+      - main
+jobs:
+  lint-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get the codes
+        uses: actions/checkout@v4
+      - name: install the dependencies
+        run: npm ci
+      - name: lint the project
+        run: npm run lint
+      - name: test the project
+        run: npm run test
+  deploy:
+    needs: lint-project
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy the project
+        run: echo "the project is deploying...."
