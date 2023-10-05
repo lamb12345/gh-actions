@@ -25,6 +25,13 @@ jobs:
         run: npm ci
       - name: build the project
         run: npm run build
+      - name: upload artifacts files
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: |
+            dist
+            package.json
 
   deploy:
     needs: build
