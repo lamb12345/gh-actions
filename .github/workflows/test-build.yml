@@ -12,7 +12,7 @@ jobs:
       - name: install the dependencies
         run: npm ci
       - name: lint the project
-        run: npm run lint 
+        run: npm run lint
       - name: test the project
         run: npm run test
   build:
@@ -37,5 +37,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: download artifacts files
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+      - name: output files
+        run: ls
       - name: deploy the project
         run: echo "the project is deploying...."
