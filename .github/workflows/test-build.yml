@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  lint-project:
+  lint-test-project:
     runs-on: ubuntu-latest
     steps:
       - name: get the codes
@@ -12,11 +12,22 @@ jobs:
       - name: install the dependencies
         run: npm ci
       - name: lint the project
-        run: npm run lint
+        run: npm run lint 
       - name: test the project
         run: npm run test
+  build:
+    needs: lint-test-project
+    runs-on: ubuntu-latest
+    steps:
+      - name: get the codes
+        uses: actions/checkout@v4
+      - name: install the dependencies
+        run: npm ci
+      - name: build the project
+        run: npm run build
+
   deploy:
-    needs: lint-project
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: deploy the project
