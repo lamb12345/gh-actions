@@ -1,10 +1,10 @@
-name: build and test the project
+name: Project building and deployment
 on:
   push:
     branches:
       - main
 jobs:
-  lint-test-project:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: get the codes
@@ -13,10 +13,18 @@ jobs:
         run: npm ci
       - name: lint the project
         run: npm run lint
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: get the codes
+        uses: actions/checkout@v4
+      - name: install the dependencies
+        run: npm ci
       - name: test the project
         run: npm run test
   build:
-    needs: lint-test-project
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: get the codes
@@ -25,23 +33,20 @@ jobs:
         run: npm ci
       - name: build the project
         run: npm run build
-      - name: upload artifacts files
+      - name: produce the artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dist-files
-          path: |
-            dist
-            package.json
-
+          path: dist
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: download artifacts files
+      - name: download the artifacts
         uses: actions/download-artifact@v3
         with:
           name: dist-files
-      - name: output files
+      - name: view artifacts
         run: ls
-      - name: deploy the project
-        run: echo "the project is deploying...."
+      - name: deploy
+        run: echo "deploying..."
